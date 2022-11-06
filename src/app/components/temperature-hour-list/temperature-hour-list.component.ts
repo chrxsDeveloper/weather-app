@@ -15,7 +15,7 @@ export class TemperatureHourListComponent implements OnInit {
 
     temperatureList?: TemperatureHourListItem[] = undefined;
     headlineMsg?: string = 'Wolken von 00:00-04:00, und teilweise Bevölkerung erwartet um 04:00.';
-    weatherIcons = ['moon-stars_14x15', 'cloud_19x12', 'cloud-moon_19x12', 'sunrise_19x15', 'sunset_19x15'];
+    weatherIcons = ['moon-stars_14x15', 'cloud_19x12', 'cloud-moon_19x12'];
 
     private nuernbergLocation = '49.465019432927235,11.100836260960223';
 
@@ -29,15 +29,17 @@ export class TemperatureHourListComponent implements OnInit {
     ngOnInit(): void {
         this.tokenGenerator.createToken().subscribe(next => {
             const accessToken = next.accessToken;
-            const from = new Date();
-            from.setHours(from.getHours() + 1);
-            from.setMinutes(0);
-            from.setSeconds(0);
+            const now = DateTime.now();
+            const from = now;
+            from.hours = !!from.hours ? from.hours + 1 : 1;
+            from.minutes = 0;
+            from.seconds = 0;
 
-            this.weatherApiService.getTemperature(DateTime.now(), accessToken, this.nuernbergLocation).subscribe(next => {
+            // First temperature
+            this.weatherApiService.getTemperature(now, accessToken, this.nuernbergLocation).subscribe(next => {
                 this.temperatureList = [
                     new TemperatureHourListItem(
-                        DateTime.now(),
+                        now,
                         `assets/illustrations/${ this.weatherIcons[Math.floor(Math.random() * this.weatherIcons.length)] }.svg`,
                         'test',
                         this.converter.toDisplayTemperature(next.data[0].coordinates[0].dates[0].value),
@@ -46,31 +48,76 @@ export class TemperatureHourListComponent implements OnInit {
                 ];
             });
 
-            this.weatherApiService.getTemperature(
-                new DateTimeSpan(
-                    DateTime.fromDate(from),
-                    DateTime.onlyDays(1),
-                    DateTime.onlyHours(1)
-                ),
-                accessToken,
-                this.nuernbergLocation
-            ).subscribe(next => {
-                const temperatures = next.data[0].coordinates[0].dates.map(x => {
-                    return new TemperatureHourListItem(
-                        DateTime.fromUtc(x.date),
-                        `assets/illustrations/${ this.weatherIcons[Math.floor(Math.random() * this.weatherIcons.length)] }.svg`,
-                        'test',
-                        this.converter.toDisplayTemperature(x.value)
-                    );
-                });
+            // Sunrise
+            this.weatherApiService.getSunrise(now, accessToken, this.nuernbergLocation).subscribe(sunrise => {
 
-                if (!!this.temperatureList) {
-                    this.temperatureList.push(...temperatures);
-                } else {
-                    this.temperatureList = temperatures;
-                }
+                // Sunset
+                this.weatherApiService.getSunset(now, accessToken, this.nuernbergLocation).subscribe(sunset => {
+
+                    // Other temperatures
+                    this.weatherApiService.getTemperature(
+                        new DateTimeSpan(
+                            from,
+                            DateTime.onlyDays(1),
+                            DateTime.onlyHours(1)
+                        ),
+                        accessToken,
+                        this.nuernbergLocation
+                    ).subscribe(temp => {
+                        const temperatures = temp.data[0].coordinates[0].dates.map(x => {
+                            return new TemperatureHourListItem(
+                                x.date,
+                                `assets/illustrations/${ this.weatherIcons[Math.floor(Math.random() * this.weatherIcons.length)] }.svg`,
+                                'test',
+                                this.converter.toDisplayTemperature(x.value)
+                            );
+                        });
+
+                        if (!!this.temperatureList) {
+                            this.temperatureList.push(...temperatures);
+                        } else {
+                            this.temperatureList = temperatures;
+                        }
+
+                        // Sunrise item
+                        const sunriseItem = new TemperatureHourListItem(
+                            sunrise.data[0].coordinates[0].dates[0].date,
+                            'assets/illustrations/sunrise_19x15.svg',
+                            'sunrise-icon'
+                        );
+
+                        // Sunset item
+                        const sunsetItem = new TemperatureHourListItem(
+                            sunset.data[0].coordinates[0].dates[0].date,
+                            'assets/illustrations/sunset_19x15.svg',
+                            'sunset-icon'
+                        );
+
+                        this.insertSun(sunriseItem);
+                        this.insertSun(sunsetItem);
+                    });
+                });
             });
         });
     }
 
+    private insertSun(sunInfo: TemperatureHourListItem) {
+        if (!this.temperatureList) {
+            this.temperatureList = [sunInfo];
+            return;
+        }
+
+        this.temperatureList.forEach((value: TemperatureHourListItem, index: number) => {
+            const currentValue = value.dateTime.getValue();
+            const sunValue = sunInfo.dateTime.getValue();
+
+            // console.log(sunValue + ' - ' + currentValue)
+
+            if (sunValue <= currentValue) {
+                if (index !== 0) {
+                    this.temperatureList!.splice(index, 0, sunInfo);
+                }
+            }
+        });
+    }
 }

@@ -1,3 +1,5 @@
+import { DateTime } from '../../services/weather-api/model/date-time.model';
+
 export class WeatherApiItem {
     version: string;
     user: string;
@@ -14,7 +16,7 @@ export class WeatherApiItem {
     }
 }
 
-class Data {
+export class Data {
     parameter: string;
     coordinates: Coordinate[];
 
@@ -24,7 +26,7 @@ class Data {
     }
 }
 
-class Coordinate {
+export class Coordinate {
     lat: number;
     lon: number;
     dates: Date[];
@@ -36,12 +38,13 @@ class Coordinate {
     }
 }
 
-class Date {
-    date: string;
+export class Date {
+    date: string | DateTime;
     value: number;
 
-    constructor(date: string, value: number) {
+    constructor(date: string | DateTime, value: number) {
         this.date = date;
         this.value = value;
     }
 }
+

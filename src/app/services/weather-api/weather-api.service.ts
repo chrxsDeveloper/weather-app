@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { ConverterService } from '../converter/converter.service';
 import { WeatherApiItem } from '../../shared-models/weather-api/weather-api-item.model';
@@ -73,6 +73,12 @@ export class WeatherApiService {
         const format = 'json';
         const url = this.buildUrl(this.converter.toUtc(dateTime), parameters, locations.join('+'), format, accessToken);
 
-        return this.http.get<WeatherApiItem>(url);
+        return this.http.get<WeatherApiItem>(url).pipe(
+            map(obj => {
+                const a = this.converter.toWeatherApi(obj);
+                console.log('%j', a);
+                return a;
+            })
+        );
     }
 }

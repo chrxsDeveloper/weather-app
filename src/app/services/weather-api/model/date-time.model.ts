@@ -19,10 +19,10 @@ export class DateTime {
         this.year = year;
         this.months = months;
         this.days = days;
-        this.hours = !!hours && hours > 23 ? hours - 24 : hours;
+        this.hours = !!hours ? ((hours > 23 ? hours - 24 : hours) - (!!plusHours ? plusHours : 0)) : hours;
         this.minutes = minutes;
         this.seconds = seconds;
-        this.plusHours = plusHours;
+        this.plusHours = undefined;
     }
 
     static now(): DateTime {
@@ -42,16 +42,17 @@ export class DateTime {
     }
 
     static fromUtc(utc: string): DateTime {
-        utc = utc.replace('T', '').replace('-', '').replace(':', '');
+        const substract = 'T-:'.split('');
+        utc = utc.split('').map(c => substract.includes(c) ? '' : c).join('');
 
         return new DateTime(
-            +utc.substring(0, 3),
+            +utc.substring(0, 4),
             +utc.substring(4, 6),
-            +utc.substring(7, 9),
-            +utc.substring(9, 11) + 1,
+            +utc.substring(6, 8),
+            +utc.substring(8, 10) + 1,
             +utc.substring(10, 12),
             +utc.substring(12, 14),
-            1
+            utc.split('').includes('+') ? +utc.split('+')[1].substring(0, 1) : undefined
         );
     }
 
@@ -96,6 +97,14 @@ export class DateTime {
     }
 
     getHour2Digits(): string {
-        return !this.hours ? '00' : DateTime.addZero(this.hours);
+        return !!this.hours ? DateTime.addZero(this.hours) : '00';
+    }
+
+    getValue(): number {
+        return +this.toUtc()
+            .replace('-', '')
+            .replace(':', '')
+            .replace('T', '')
+            .replace('Z', '');
     }
 }
