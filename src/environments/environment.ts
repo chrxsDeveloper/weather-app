@@ -3,7 +3,11 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+    production: false,
+    weatherApi: {
+        basePath: 'https://api.meteomatics.com',
+        tokenPath: 'https://login.meteomatics.com/api/v1/token'
+    }
 };
 
 /*

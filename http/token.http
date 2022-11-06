@@ -1,0 +1,4 @@
+### Creates access token
+GET https://login.meteomatics.com/api/v1/token
+Content-Type: application/json
+Authorization: Basic my-private-project_bach Dlas08P1aQ

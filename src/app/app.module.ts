@@ -3,16 +3,27 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { HttpClientModule } from '@angular/common/http';
+import { PrimaryTemperatureComponent } from './components/primary-temperature/primary-temperature.component';
+import { TemperatureHourListComponent } from './components/temperature-hour-list/temperature-hour-list.component';
+import {
+    TemperatureHourListItemComponent
+} from './components/temperature-hour-list/temperature-hour-list-item/temperature-hour-list-item.component';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    FontAwesomeModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        PrimaryTemperatureComponent,
+        TemperatureHourListComponent,
+        TemperatureHourListItemComponent
+    ],
+    imports: [
+        BrowserModule,
+        FontAwesomeModule,
+        HttpClientModule
+    ],
+    providers: [],
+    bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

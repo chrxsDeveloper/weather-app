@@ -1,0 +1,10 @@
+### Get temperature in nürnberg of 01. Nov. 2022 at 19:04
+GET https://api.meteomatics.com/{{ dateTime }}/{{ temp_parameters }}/{{ locations }}/{{ format }}?access_token={{ access_token }}
+Accept: application/json
+
+### Get temperatures in nürnberg every hour for one day
+GET https://api.meteomatics.com/{{ dateTimeSpan }}/{{ temp_parameters }}/{{ locations }}/{{ format }}?access_token={{ access_token }}
+
+### Get sunrise in nürnberg of 01. Nov. 2022 at 19:04
+GET https://api.meteomatics.com/{{ dateTime }}/{{ sunrise_parameters }}/{{ locations }}/{{ format }}?access_token={{ access_token }}
+Accept: application/json

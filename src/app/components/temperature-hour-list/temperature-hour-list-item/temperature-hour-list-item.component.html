@@ -1,0 +1,17 @@
+<div *ngIf="!!item else noContent" class="flex flex-col {{ item.isNow ? '' : 'ml-[22px]' }}">
+    <div class="grid justify-items-center mb-3">
+        <span class="text-[11px]">
+            <span class="font-semibold">{{ item.isNow ? 'Jetzt' : item.dateTime.getHour2Digits() }}</span>
+            <span *ngIf="!item.isNow">&nbsp;Uhr</span>
+        </span>
+    </div>
+    <div class="grid justify-items-center">
+        <img [alt]="item.svgIconAlt" [src]="item.svgIconSrc" draggable="false"/>
+    </div>
+    <div class="grid justify-items-center mt-3">
+        <span class="text-sm font-semibold">{{ item.temperature }}&deg;</span>
+    </div>
+</div>
+<ng-template #noContent>
+    <span>no content</span>
+</ng-template>
