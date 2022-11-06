@@ -74,11 +74,7 @@ export class WeatherApiService {
         const url = this.buildUrl(this.converter.toUtc(dateTime), parameters, locations.join('+'), format, accessToken);
 
         return this.http.get<WeatherApiItem>(url).pipe(
-            map(obj => {
-                const a = this.converter.toWeatherApi(obj);
-                console.log('%j', a);
-                return a;
-            })
+            map(obj => this.converter.toWeatherApi(obj))
         );
     }
 }

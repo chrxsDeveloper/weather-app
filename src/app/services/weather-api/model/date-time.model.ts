@@ -101,10 +101,6 @@ export class DateTime {
     }
 
     getValue(): number {
-        return +this.toUtc()
-            .replace('-', '')
-            .replace(':', '')
-            .replace('T', '')
-            .replace('Z', '');
+        return +(this.toUtc().split('').map(c => [...'-:TZ'].includes(c) ? '' : c).join(''));
     }
 }

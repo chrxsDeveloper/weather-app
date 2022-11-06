@@ -93,31 +93,34 @@ export class TemperatureHourListComponent implements OnInit {
                             'sunset-icon'
                         );
 
-                        this.insertSun(sunriseItem);
-                        this.insertSun(sunsetItem);
+                        // console.log('%j', this.temperatureList);
+                        this.temperatureList = this.insertSun(this.temperatureList, sunriseItem);
+                        this.temperatureList = this.insertSun(this.temperatureList, sunsetItem);
+                        // console.log('%j', this.temperatureList);
                     });
                 });
             });
         });
     }
 
-    private insertSun(sunInfo: TemperatureHourListItem) {
-        if (!this.temperatureList) {
-            this.temperatureList = [sunInfo];
-            return;
-        }
+    private insertSun(list: TemperatureHourListItem[], sunInfo: TemperatureHourListItem): TemperatureHourListItem[] {
+        if (!list.length) return [sunInfo];
 
-        this.temperatureList.forEach((value: TemperatureHourListItem, index: number) => {
+        const outputList = list;
+
+        list.forEach((value: TemperatureHourListItem, index: number) => {
             const currentValue = value.dateTime.getValue();
             const sunValue = sunInfo.dateTime.getValue();
 
-            // console.log(sunValue + ' - ' + currentValue)
+            console.log('%j', 'Iter: ' + value.dateTime + '\n' + sunInfo.dateTime + '\n\n');
 
             if (sunValue <= currentValue) {
                 if (index !== 0) {
-                    this.temperatureList!.splice(index, 0, sunInfo);
+                    outputList.splice(index, 0, sunInfo);
                 }
             }
         });
+
+        return outputList;
     }
 }
