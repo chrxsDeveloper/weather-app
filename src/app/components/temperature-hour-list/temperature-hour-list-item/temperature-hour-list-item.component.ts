@@ -20,6 +20,8 @@ export class TemperatureHourListItemComponent implements OnInit {
     temperature!: number | undefined;
     displayTemp!: string;
     displayHour!: string;
+    isNow = false;
+    isSunInfo = false;
 
     constructor() {
     }
@@ -30,6 +32,19 @@ export class TemperatureHourListItemComponent implements OnInit {
         this.svgIconAlt = this.item.svgIconInfo.alt;
         this.temperature = this.item.temperature;
         this.displayTemp = !!this.temperature ? this.temperature + '°' : (this.item.svgIconInfo.name === new SvgIconInfo('assets/illustrations/sunrise_19x15.svg', '').name ? 'Sonnenaufgang' : 'Sonnenuntergang');
+        this.isNow = this.item.isNow;
+        this.isSunInfo = this.item.temperature === undefined;
         this.displayHour = this.item.isNow ? 'Jetzt' : this.dateTime.getHour2Digits();
+        this.setDisplayHour();
+    }
+
+    private setDisplayHour() {
+        if (this.isNow) {
+            this.displayHour = 'Jetzt';
+        } else if (this.isSunInfo) {
+            this.displayHour = this.item.dateTime.toPattern_HHMM();
+        } else {
+            this.displayHour = this.item.dateTime.getHour2Digits();
+        }
     }
 }

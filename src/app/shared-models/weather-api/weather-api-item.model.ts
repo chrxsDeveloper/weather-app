@@ -40,9 +40,9 @@ export class Coordinate {
 
 export class Date {
     date: string | DateTime;
-    value: number;
+    value: string | number;
 
-    constructor(date: string | DateTime, value: number) {
+    constructor(date: string | DateTime, value: string | number) {
         this.date = date;
         this.value = value;
     }

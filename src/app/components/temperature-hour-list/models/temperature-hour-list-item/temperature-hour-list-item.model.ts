@@ -6,7 +6,13 @@ export class TemperatureHourListItem {
     temperature: number | undefined;
     isNow: boolean;
 
-    constructor(dateTime: string | DateTime, svgIconSrc: string, svgIconAlt: string, temperature: number | undefined = undefined, isNow: boolean = false) {
+    constructor(
+        dateTime: string | DateTime,
+        svgIconSrc: string,
+        svgIconAlt: string,
+        temperature: number | undefined = undefined,
+        isNow: boolean = false
+    ) {
         this.dateTime = dateTime instanceof DateTime ? dateTime : DateTime.fromUtc(dateTime);
         this.svgIconInfo = new SvgIconInfo(svgIconSrc, svgIconAlt);
         this.temperature = temperature;

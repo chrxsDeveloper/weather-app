@@ -42,61 +42,62 @@ export class TemperatureHourListComponent implements OnInit {
                         now,
                         `assets/illustrations/${ this.weatherIcons[Math.floor(Math.random() * this.weatherIcons.length)] }.svg`,
                         'test',
-                        this.converter.toDisplayTemperature(next.data[0].coordinates[0].dates[0].value),
+                        this.converter.toDisplayTemperature(+next.data[0].coordinates[0].dates[0].value),
                         true
                     )
                 ];
-            });
 
-            // Sunrise
-            this.weatherApiService.getSunrise(now, accessToken, this.nuernbergLocation).subscribe(sunrise => {
+                // Sunrise
+                this.weatherApiService.getComingSunrise(accessToken, this.nuernbergLocation).subscribe(sunrise => {
+                    console.log('%j', sunrise);
 
-                // Sunset
-                this.weatherApiService.getSunset(now, accessToken, this.nuernbergLocation).subscribe(sunset => {
+                    // Sunset
+                    this.weatherApiService.getComingSunset(accessToken, this.nuernbergLocation).subscribe(sunset => {
 
-                    // Other temperatures
-                    this.weatherApiService.getTemperature(
-                        new DateTimeSpan(
-                            from,
-                            DateTime.onlyDays(1),
-                            DateTime.onlyHours(1)
-                        ),
-                        accessToken,
-                        this.nuernbergLocation
-                    ).subscribe(temp => {
-                        const temperatures = temp.data[0].coordinates[0].dates.map(x => {
-                            return new TemperatureHourListItem(
-                                x.date,
-                                `assets/illustrations/${ this.weatherIcons[Math.floor(Math.random() * this.weatherIcons.length)] }.svg`,
-                                'test',
-                                this.converter.toDisplayTemperature(x.value)
+                        // Other temperatures
+                        this.weatherApiService.getTemperature(
+                            new DateTimeSpan(
+                                from,
+                                DateTime.onlyDays(1),
+                                DateTime.onlyHours(1)
+                            ),
+                            accessToken,
+                            this.nuernbergLocation
+                        ).subscribe(temp => {
+                            const temperatures = temp.data[0].coordinates[0].dates.map(x => {
+                                return new TemperatureHourListItem(
+                                    x.date,
+                                    `assets/illustrations/${ this.weatherIcons[Math.floor(Math.random() * this.weatherIcons.length)] }.svg`,
+                                    'test',
+                                    this.converter.toDisplayTemperature(+x.value)
+                                );
+                            });
+
+                            if (!!this.temperatureList) {
+                                this.temperatureList.push(...temperatures);
+                            } else {
+                                this.temperatureList = temperatures;
+                            }
+
+                            // Sunrise item
+                            const sunriseItem = new TemperatureHourListItem(
+                                '' + sunrise.data[0].coordinates[0].dates[0].value,
+                                'assets/illustrations/sunrise_19x15.svg',
+                                'sunrise-icon'
                             );
+
+                            // Sunset item
+                            const sunsetItem = new TemperatureHourListItem(
+                                '' + sunset.data[0].coordinates[0].dates[0].value,
+                                'assets/illustrations/sunset_19x15.svg',
+                                'sunset-icon'
+                            );
+
+                            // console.log('%j', this.temperatureList);
+                            this.temperatureList = this.insertSun(this.temperatureList, sunriseItem);
+                            this.temperatureList = this.insertSun(this.temperatureList, sunsetItem);
+                            // console.log('%j', this.temperatureList);
                         });
-
-                        if (!!this.temperatureList) {
-                            this.temperatureList.push(...temperatures);
-                        } else {
-                            this.temperatureList = temperatures;
-                        }
-
-                        // Sunrise item
-                        const sunriseItem = new TemperatureHourListItem(
-                            sunrise.data[0].coordinates[0].dates[0].date,
-                            'assets/illustrations/sunrise_19x15.svg',
-                            'sunrise-icon'
-                        );
-
-                        // Sunset item
-                        const sunsetItem = new TemperatureHourListItem(
-                            sunset.data[0].coordinates[0].dates[0].date,
-                            'assets/illustrations/sunset_19x15.svg',
-                            'sunset-icon'
-                        );
-
-                        // console.log('%j', this.temperatureList);
-                        this.temperatureList = this.insertSun(this.temperatureList, sunriseItem);
-                        this.temperatureList = this.insertSun(this.temperatureList, sunsetItem);
-                        // console.log('%j', this.temperatureList);
                     });
                 });
             });
@@ -104,21 +105,21 @@ export class TemperatureHourListComponent implements OnInit {
     }
 
     private insertSun(list: TemperatureHourListItem[], sunInfo: TemperatureHourListItem): TemperatureHourListItem[] {
-        if (!list.length) return [sunInfo];
+        if (list.length === 0) return [sunInfo];
 
-        const outputList = list;
+        const outputList: TemperatureHourListItem[] = [];
+        let sunIsSet = false;
 
         list.forEach((value: TemperatureHourListItem, index: number) => {
             const currentValue = value.dateTime.getValue();
             const sunValue = sunInfo.dateTime.getValue();
 
-            console.log('%j', 'Iter: ' + value.dateTime + '\n' + sunInfo.dateTime + '\n\n');
-
-            if (sunValue <= currentValue) {
-                if (index !== 0) {
-                    outputList.splice(index, 0, sunInfo);
-                }
+            if (sunValue <= currentValue && index !== 0 && !sunIsSet) {
+                outputList.push(sunInfo);
+                sunIsSet = true;
             }
+
+            outputList.push(value);
         });
 
         return outputList;
