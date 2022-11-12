@@ -9,13 +9,15 @@ import { TemperatureHourListComponent } from './components/temperature-hour-list
 import {
     TemperatureHourListItemComponent
 } from './components/temperature-hour-list/temperature-hour-list-item/temperature-hour-list-item.component';
+import { UvIndexComponent } from './components/uv-index/uv-index.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         PrimaryTemperatureComponent,
         TemperatureHourListComponent,
-        TemperatureHourListItemComponent
+        TemperatureHourListItemComponent,
+        UvIndexComponent
     ],
     imports: [
         BrowserModule,
