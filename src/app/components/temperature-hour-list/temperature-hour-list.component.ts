@@ -15,6 +15,8 @@ export class TemperatureHourListComponent implements OnInit {
 
     temperatureList?: TemperatureHourListItem[] = undefined;
     headlineMsg?: string = 'Wolken von 00:00-04:00, und teilweise Bevölkerung erwartet um 04:00.';
+    arrowsVisible = false;
+
     weatherIcons = ['moon-stars_14x15', 'cloud_19x12', 'cloud-moon_19x12'];
 
     private nuernbergLocation = '49.465019432927235,11.100836260960223';

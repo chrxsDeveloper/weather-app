@@ -1,6 +1,6 @@
-<div class="border border-stone-400 backdrop-opacity-5 backdrop-invert bg-white/30 rounded p-2.5 grid grid-rows-3 gap-0">
-    <span class="border-b text-white row-span-1 pb-2.5 text-[11px] h-fit">{{ headlineMsg }}</span>
-    <ul class="row-span-2 flex flex-rows flex-4 overflow-x-auto disc-none no-scrollbar">
+<div class="border border-white border-opacity-10 bg-white bg-opacity-5 rounded-lg px-2 pt-3 pb-2 grid grid-rows-3 gap-1">
+    <span class="border-b border-white border-opacity-30 text-gray-200 row-span-1 pb-2.5 text-[11px] h-fit">{{ headlineMsg }}</span>
+    <ul class="row-span-2 flex flex-rows flex-4 overflow-x-auto disc-none no-scrollbar text-white">
         <li *ngFor="let item of temperatureList">
             <app-temperature-hour-list-item [item]="item"></app-temperature-hour-list-item>
         </li>

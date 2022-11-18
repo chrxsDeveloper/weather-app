@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { TokenGen, TokenGenDto } from '../weather-api/model/token-gen.model';
 import { DateTimeSpan } from '../weather-api/model/date-time-span.model';
 import { DateTime } from '../weather-api/model/date-time.model';
-import { Coordinate, Data, Date, WeatherApiItem } from '../../shared-models/weather-api/weather-api-item.model';
+import { Coordinate, Data, Date, WeatherApiItem } from '../../shared/models/weather-api/weather-api-item.model';
 
 @Injectable({
     providedIn: 'root'

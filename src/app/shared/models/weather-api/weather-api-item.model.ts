@@ -1,4 +1,4 @@
-import { DateTime } from '../../services/weather-api/model/date-time.model';
+import { DateTime } from '../../../services/weather-api/model/date-time.model';
 
 export class WeatherApiItem {
     version: string;

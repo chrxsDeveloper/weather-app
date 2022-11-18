@@ -1,4 +1,9 @@
-<div class="bg-blue-900 w-screen h-screen">
-    <app-primary-temperature></app-primary-temperature>
-    <app-temperature-hour-list></app-temperature-hour-list>
+<div class="bg-gray-800 w-screen h-screen grid place-items-center">
+    <div class="w-[960px] h-screen">
+        <app-primary-temperature></app-primary-temperature>
+        <div class="grid grid-rows-4 grid-cols-6 gap-4">
+            <app-temperature-hour-list class="row-span-1 col-span-4"></app-temperature-hour-list>
+            <app-uv-index class="row-span-1 col-span-1"></app-uv-index>
+        </div>
+    </div>
 </div>

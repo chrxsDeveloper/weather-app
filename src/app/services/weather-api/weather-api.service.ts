@@ -3,7 +3,7 @@ import { environment } from '../../../environments/environment';
 import { map, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { ConverterService } from '../converter/converter.service';
-import { WeatherApiItem } from '../../shared-models/weather-api/weather-api-item.model';
+import { WeatherApiItem } from '../../shared/models/weather-api/weather-api-item.model';
 import { DateTimeSpan } from './model/date-time-span.model';
 import { DateTime } from './model/date-time.model';
 
