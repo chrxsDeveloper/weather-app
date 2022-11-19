@@ -3,9 +3,9 @@ import { environment } from '../../../environments/environment';
 import { map, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { ConverterService } from '../converter/converter.service';
-import { WeatherApiItem } from '../../shared/models/weather-api/weather-api-item.model';
-import { DateTimeSpan } from './model/date-time-span.model';
-import { DateTime } from './model/date-time.model';
+import { WeatherApiResponse } from '../../models/weather-api/weather-api-response.model';
+import { DateTimeSpan } from '../../models/date-time-span/date-time-span.model';
+import { DateTime } from '../../models/date-time/date-time.model';
 
 @Injectable({
     providedIn: 'root'
@@ -20,60 +20,70 @@ export class WeatherApiService {
     ) {
     }
 
-    getTemperature(datetime: DateTime | DateTimeSpan, accessToken: string, ...locations: string[]): Observable<WeatherApiItem> {
-        const parameters = 't_2m:C';
+    getTemperature(datetime: DateTime | DateTimeSpan, accessToken: string, ...locations: string[]): Observable<WeatherApiResponse> {
+        const parameter = 't_2m:C';
 
-        return this.sendHttpReq(datetime, parameters, locations, accessToken);
+        return this.sendHttpReq(datetime, parameter, locations, accessToken);
     }
 
-    getCurrentTemperature(accessToken: string, ...locations: string[]): Observable<WeatherApiItem> {
+    getCurrentTemperature(accessToken: string, ...locations: string[]): Observable<WeatherApiResponse> {
         return this.getTemperature(DateTime.now(), accessToken, ...locations);
     }
 
-    getComingMaxTemperature(datetime: DateTime | DateTimeSpan, accessToken: string, ...locations: string[]): Observable<WeatherApiItem> {
-        const parameters = 't_max_2m_24h:C';
+    getComingMaxTemperature(datetime: DateTime | DateTimeSpan, accessToken: string, ...locations: string[]): Observable<WeatherApiResponse> {
+        const parameter = 't_max_2m_24h:C';
 
-        return this.sendHttpReq(datetime, parameters, locations, accessToken);
+        return this.sendHttpReq(datetime, parameter, locations, accessToken);
     }
 
-    getComingMinTemperature(datetime: DateTime | DateTimeSpan, accessToken: string, ...locations: string[]): Observable<WeatherApiItem> {
-        const parameters = 't_min_2m_24h:C';
+    getComingMinTemperature(datetime: DateTime | DateTimeSpan, accessToken: string, ...locations: string[]): Observable<WeatherApiResponse> {
+        const parameter = 't_min_2m_24h:C';
 
-        return this.sendHttpReq(datetime, parameters, locations, accessToken);
+        return this.sendHttpReq(datetime, parameter, locations, accessToken);
     }
 
-    getSunrise(datetime: DateTime | DateTimeSpan, accessToken: string, ...locations: string[]): Observable<WeatherApiItem> {
-        const parameters = 'sunrise:sql';
+    getSunrise(datetime: DateTime | DateTimeSpan, accessToken: string, ...locations: string[]): Observable<WeatherApiResponse> {
+        const parameter = 'sunrise:sql';
 
-        return this.sendHttpReq(datetime, parameters, locations, accessToken);
+        return this.sendHttpReq(datetime, parameter, locations, accessToken);
     }
 
-    getSunset(datetime: DateTime | DateTimeSpan, accessToken: string, ...locations: string[]): Observable<WeatherApiItem> {
-        const parameters = 'sunset:sql';
+    getSunset(datetime: DateTime | DateTimeSpan, accessToken: string, ...locations: string[]): Observable<WeatherApiResponse> {
+        const parameter = 'sunset:sql';
 
-        return this.sendHttpReq(datetime, parameters, locations, accessToken);
+        return this.sendHttpReq(datetime, parameter, locations, accessToken);
     }
 
-    getComingSunrise(accessToken: string, ...locations: string[]): Observable<WeatherApiItem> {
+    getComingSunrise(accessToken: string, ...locations: string[]): Observable<WeatherApiResponse> {
         return this.getSunrise(DateTime.now(), accessToken, ...locations);
     }
 
-    getComingSunset(accessToken: string, ...locations: string[]): Observable<WeatherApiItem> {
+    getComingSunset(accessToken: string, ...locations: string[]): Observable<WeatherApiResponse> {
         return this.getSunset(DateTime.now(), accessToken, ...locations);
+    }
+
+    getUvIndex(datetime: DateTime, accessToken: string, ...locations: string[]): Observable<WeatherApiResponse> {
+        const parameter = 'uv:idx';
+
+        return this.sendHttpReq(datetime, parameter, locations, accessToken);
+    }
+
+    getCurrentUvIndex(accessToken: string, ...locations: string[]): Observable<WeatherApiResponse> {
+        return this.getUvIndex(DateTime.now(), accessToken, ...locations);
     }
 
     private buildUrl(datetime: string, parameters: string, locations: string, format: string, accessToken: string): string {
         return this.baseUrl + `/${ datetime }/${ parameters }/${ locations }/${ format }?access_token=${ accessToken }`;
     }
 
-    private sendHttpReq(dateTime: DateTime | DateTimeSpan, parameters: string, locations: string[], accessToken: string): Observable<WeatherApiItem> {
+    private sendHttpReq(dateTime: DateTime | DateTimeSpan, parameter: string, locations: string[], accessToken: string): Observable<WeatherApiResponse> {
 
         if (!locations.length) throw new Error('you have to have at least one location');
 
         const format = 'json';
-        const url = this.buildUrl(this.converter.toUtc(dateTime), parameters, locations.join('+'), format, accessToken);
+        const url = this.buildUrl(this.converter.toUtc(dateTime), parameter, locations.join('+'), format, accessToken);
 
-        return this.http.get<WeatherApiItem>(url).pipe(
+        return this.http.get<WeatherApiResponse>(url).pipe(
             map(obj => this.converter.toWeatherApi(obj))
         );
     }

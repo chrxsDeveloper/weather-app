@@ -1,16 +1,13 @@
 import { Injectable } from '@angular/core';
-import { TokenGen, TokenGenDto } from '../weather-api/model/token-gen.model';
-import { DateTimeSpan } from '../weather-api/model/date-time-span.model';
-import { DateTime } from '../weather-api/model/date-time.model';
-import { Coordinate, Data, Date, WeatherApiItem } from '../../shared/models/weather-api/weather-api-item.model';
+import { TokenGen, TokenGenDto } from '../../models/token-gen/token-gen.model';
+import { DateTimeSpan } from '../../models/date-time-span/date-time-span.model';
+import { DateTime } from '../../models/date-time/date-time.model';
+import { Coordinate, Data, Date, WeatherApiResponse } from '../../models/weather-api/weather-api-response.model';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ConverterService {
-
-    constructor() {
-    }
 
     toTokenGen(obj: TokenGenDto): TokenGen {
         return new TokenGen(obj.access_token, obj.token_type);
@@ -25,8 +22,8 @@ export class ConverterService {
         return Math.round(temperature);
     }
 
-    toWeatherApi(obj: WeatherApiItem): WeatherApiItem {
-        return new WeatherApiItem(
+    toWeatherApi(obj: WeatherApiResponse): WeatherApiResponse {
+        return new WeatherApiResponse(
             obj.version,
             obj.user,
             obj.dateGenerated,
@@ -42,12 +39,12 @@ export class ConverterService {
                                 return new Date(
                                     date.date instanceof DateTime ? date.date : DateTime.fromUtc(date.date),
                                     date.value
-                                )
+                                );
                             })
-                        )
+                        );
                     })
-                )
+                );
             })
-        )
+        );
     }
 }

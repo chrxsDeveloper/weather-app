@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { WeatherApiService } from '../../services/weather-api/weather-api.service';
-import { TokenGeneratorService } from '../../services/weather-api/token-generator/token-generator.service';
-import { DateTime } from '../../services/weather-api/model/date-time.model';
+import { TokenGeneratorService } from '../../services/token-generator/token-generator.service';
+import { DateTime } from '../../models/date-time/date-time.model';
 import { ConverterService } from '../../services/converter/converter.service';
 
 @Component({

@@ -1,0 +1,9 @@
+<div class="grid grid-rows-1 grid-cols-12 text-base text-white border-t border-white border-opacity-20 pt-2 mt-2 gap-1">
+    <span class="col-span-4 capitalize">{{ isToday ? 'heute' : weekday }}</span>
+    <div class="col-span-2 grid place-items-center justify-items-start">
+        <img [src]="weatherIconSrc" alt=""/>
+    </div>
+    <span class="col-span-1 opacity-50 text-center">{{ minTemp }}&deg;</span>
+    <div class="col-span-4"></div>
+    <span class="col-span-1 text-center">{{ maxTemp }}&deg;</span>
+</div>
