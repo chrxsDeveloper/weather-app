@@ -2,7 +2,11 @@
 module.exports = {
     content: ["./src/**/*.{html,ts}"],
     theme: {
-        extend: {},
+        extend: {
+            backgroundImage: {
+                'compass-body': "url('src/assets/widget-illustrations/compass-body_366x366.svg')"
+            }
+        },
         fontFamily: {
             'body': []
         }
